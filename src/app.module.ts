@@ -7,13 +7,6 @@ import { PrismaModule } from './prisma';
 import { EmailModule } from './modules/email/email.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
-import { RbacModule } from './modules/rbac/rbac.module';
-import { UploadModule } from './modules/upload/upload.module';
-import { AttendanceModule } from './modules/attendance/attendance.module';
-import { TeamModule } from './modules/team/team.module';
-import { WorkLocationModule } from './modules/work-location/work-location.module';
-import { ReportModule } from './modules/report/report.module';
-import { DivisionModule } from './modules/division/division.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from './common';
 
@@ -45,13 +38,6 @@ import { RolesGuard } from './common';
     EmailModule,
     AuthModule,
     UserModule,
-    RbacModule,
-    UploadModule,
-    AttendanceModule,
-    TeamModule,
-    WorkLocationModule,
-    ReportModule,
-    DivisionModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
