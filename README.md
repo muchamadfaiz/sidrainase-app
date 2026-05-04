@@ -121,7 +121,7 @@ Lihat `.env.example` untuk daftar lengkap environment variables yang dibutuhkan.
 | --------------------- | --------------------------- | ----------------------------- |
 | `NODE_ENV`            | Environment                 | `development`                 |
 | `APP_PORT`            | Port aplikasi               | `3000`                        |
-| `DATABASE_URL`        | PostgreSQL connection string| `postgresql://postgres:postgres@localhost:5432/sidrainase` |
+| `DATABASE_URL`        | PostgreSQL connection string| `postgresql://postgres:postgres@localhost:5433/sidrainase` |
 | `JWT_ACCESS_SECRET`   | JWT access token secret     | -                             |
 | `JWT_REFRESH_SECRET`  | JWT refresh token secret    | -                             |
 | `SWAGGER_ENABLED`     | Aktifkan Swagger docs       | `true`                        |

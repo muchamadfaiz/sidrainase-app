@@ -7,6 +7,9 @@ import { PrismaModule } from './prisma';
 import { EmailModule } from './modules/email/email.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { DrainagePointModule } from './modules/drainage-point/drainage-point.module';
+import { DrainageSegmentModule } from './modules/drainage-segment/drainage-segment.module';
+import { FloodZoneModule } from './modules/flood-zone/flood-zone.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from './common';
 
@@ -38,6 +41,9 @@ import { RolesGuard } from './common';
     EmailModule,
     AuthModule,
     UserModule,
+    DrainagePointModule,
+    DrainageSegmentModule,
+    FloodZoneModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

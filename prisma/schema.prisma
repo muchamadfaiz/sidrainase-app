@@ -9,35 +9,35 @@ datasource db {
 }
 
 model User {
-  id                String    @id @default(uuid())
-  email             String    @unique
-  password          String
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
 
-  roleId            String
-  role              Role      @relation(fields: [roleId], references: [id])
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
 
   isActive          Boolean   @default(true)
   emailVerifiedAt   DateTime?
   passwordChangedAt DateTime?
 
-  profile                  Profile?
-  refreshTokens            RefreshToken[]
-  files                    File[]
-  passwordResetTokens      PasswordResetToken[]
-  emailVerificationTokens  EmailVerificationToken[]
+  profile                 Profile?
+  refreshTokens           RefreshToken[]
+  files                   File[]
+  passwordResetTokens     PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
 
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  deletedAt         DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@map("users")
 }
 
 model Profile {
-  id        String    @id @default(uuid())
+  id String @id @default(uuid())
 
-  userId    String    @unique
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   fullName  String
   phone     String?
@@ -46,8 +46,8 @@ model Profile {
   birthDate DateTime?
   gender    Gender?
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("profiles")
 }
@@ -58,8 +58,8 @@ enum Gender {
 }
 
 model Role {
-  id    String @id @default(uuid())
-  name  String @unique
+  id   String @id @default(uuid())
+  name String @unique
 
   users       User[]
   permissions RolePermission[]
@@ -78,7 +78,7 @@ model Permission {
 }
 
 model RolePermission {
-  id           String @id @default(uuid())
+  id String @id @default(uuid())
 
   roleId       String
   permissionId String
@@ -91,9 +91,9 @@ model RolePermission {
 }
 
 model File {
-  id           String   @id @default(uuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id])
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
   originalName String
   filename     String
@@ -101,8 +101,8 @@ model File {
   mimetype     String
   size         Int
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("files")
 }
@@ -132,15 +132,100 @@ model EmailVerificationToken {
 }
 
 model RefreshToken {
-  id        String    @id @default(uuid())
-  token     String    @unique
-  userId    String
+  id     String @id @default(uuid())
+  token  String @unique
+  userId String
 
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   expiredAt DateTime
   createdAt DateTime  @default(now())
   revokedAt DateTime?
 
   @@map("refresh_tokens")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DRAINAGE DOMAIN
+// Spec: docs/api-spec.md (di sidrainase-pupr/)
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum DrainageType {
+  primer
+  sekunder
+  tersier
+}
+
+enum DrainageCondition {
+  baik
+  perlu_perbaikan
+  rusak
+}
+
+enum FloodSeverity {
+  rendah
+  sedang
+  tinggi
+}
+
+model DrainagePoint {
+  id              String                                     @id @default(uuid())
+  drainage_id     String                                     @unique // human-readable code "D001"
+  name            String
+  lat             Float
+  lng             Float
+  drainage_type   DrainageType
+  condition       DrainageCondition
+  length          Float // meter
+  width           Float // meter
+  depth           Float // meter
+  last_inspection DateTime                                   @db.Date
+  district        String
+  description     String?                                    @db.Text
+  // PostGIS geometry — akses via raw query (ST_AsGeoJSON, ST_GeomFromGeoJSON)
+  polygon_coords  Unsupported("geometry(Polygon, 4326)")?
+  polyline_coords Unsupported("geometry(LineString, 4326)")?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([condition])
+  @@index([drainage_type])
+  @@index([district])
+  @@index([polygon_coords], type: Gist)
+  @@index([polyline_coords], type: Gist)
+  @@map("drainage_points")
+}
+
+model DrainageSegment {
+  id            String                                    @id @default(uuid())
+  name          String
+  // PostGIS LineString berisi seluruh vertices segmen jaringan drainase
+  points        Unsupported("geometry(LineString, 4326)")
+  drainage_type DrainageType
+  condition     DrainageCondition
+  length        Float // meter
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([condition])
+  @@index([drainage_type])
+  @@index([points], type: Gist)
+  @@map("drainage_segments")
+}
+
+model FloodZone {
+  id         String        @id @default(uuid())
+  name       String
+  center_lat Float
+  center_lng Float
+  radius     Int // meter
+  severity   FloodSeverity
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([severity])
+  @@map("flood_zones")
 }
