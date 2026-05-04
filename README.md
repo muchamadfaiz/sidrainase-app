@@ -1,19 +1,19 @@
-# Boilerplate NestJS
+# Sidrainase API
 
-NestJS + Prisma + PostgreSQL boilerplate project.
+Backend API untuk Sistem Informasi Drainase (sidrainase-pupr). NestJS + Prisma + PostgreSQL/PostGIS.
 
 ## Tech Stack
 
 - **NestJS** v11 (Node.js framework)
 - **Prisma** v7 (ORM)
-- **PostgreSQL** 17 (Database)
+- **PostgreSQL** 17 + **PostGIS** 3.4 (Database with GIS extension)
 - **pnpm** (Package manager)
 
 ## Prerequisites
 
 - Node.js >= 22
 - pnpm >= 10
-- PostgreSQL 17 (atau Docker)
+- PostgreSQL 17 + PostGIS extension (atau Docker dengan image `postgis/postgis`)
 
 ---
 
@@ -121,7 +121,7 @@ Lihat `.env.example` untuk daftar lengkap environment variables yang dibutuhkan.
 | --------------------- | --------------------------- | ----------------------------- |
 | `NODE_ENV`            | Environment                 | `development`                 |
 | `APP_PORT`            | Port aplikasi               | `3000`                        |
-| `DATABASE_URL`        | PostgreSQL connection string| `postgresql://postgres:postgres@localhost:5432/nestjs_boilerplate` |
+| `DATABASE_URL`        | PostgreSQL connection string| `postgresql://postgres:postgres@localhost:5432/sidrainase` |
 | `JWT_ACCESS_SECRET`   | JWT access token secret     | -                             |
 | `JWT_REFRESH_SECRET`  | JWT refresh token secret    | -                             |
 | `SWAGGER_ENABLED`     | Aktifkan Swagger docs       | `true`                        |
