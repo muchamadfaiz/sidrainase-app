@@ -33,7 +33,7 @@ shell: ## Open shell in app container
 	docker compose exec app sh
 
 shell-db: ## Open psql in database container
-	docker compose exec db psql -U postgres -d sidrainase
+	docker compose exec db sh -c 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"'
 
 db-reset: ## Stop, wipe database volume, and restart
 	docker compose down -v
