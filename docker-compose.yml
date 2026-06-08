@@ -22,10 +22,14 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-3000}:3000"
+      # KIRI = port host (boleh diganti via APP_HOST_PORT). KANAN = port internal (tetap 3000).
+      - "${APP_HOST_PORT:-3000}:3000"
     env_file:
       - .env
     environment:
+      # Paksa app listen di 3000 DI DALAM container, apa pun APP_PORT di .env.
+      # (host port diatur lewat APP_HOST_PORT di atas)
+      APP_PORT: 3000
       # Dibangun dari var .env di atas — selalu nunjuk ke service `db` (internal port 5432).
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-sidrainase}?schema=public
     depends_on:
