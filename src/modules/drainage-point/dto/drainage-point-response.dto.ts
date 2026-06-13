@@ -24,6 +24,9 @@ export class DrainagePointResponseDto {
   @ApiProperty({ enum: DrainageCondition })
   condition: DrainageCondition;
 
+  @ApiPropertyOptional({ description: 'Jenis aset infrastruktur' })
+  infrastructure_type?: string | null;
+
   @ApiProperty({ description: 'meter' })
   length: number;
 

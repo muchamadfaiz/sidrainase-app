@@ -3,6 +3,7 @@ import { DrainageType, DrainageCondition } from '@prisma/client';
 import {
   IsDateString,
   IsEnum,
+  IsIn,
   IsNotEmpty,
   IsNumber,
   IsObject,
@@ -11,6 +12,18 @@ import {
   Min,
 } from 'class-validator';
 import type { GeoJSONLineString, GeoJSONPolygon } from '../../../common';
+
+// Jenis aset infrastruktur drainase (nilai disimpan apa adanya sebagai text)
+export const INFRASTRUCTURE_TYPES = [
+  'saluran',
+  'gorong_gorong',
+  'pintu_air',
+  'rumah_pompa',
+  'manhole',
+  'kolam_retensi',
+  'inlet_outfall',
+  'lainnya',
+] as const;
 
 export class CreateDrainagePointDto {
   @ApiPropertyOptional({
@@ -41,6 +54,15 @@ export class CreateDrainagePointDto {
   @ApiProperty({ enum: DrainageCondition, example: DrainageCondition.baik })
   @IsEnum(DrainageCondition)
   condition: DrainageCondition;
+
+  @ApiPropertyOptional({
+    description: 'Jenis aset infrastruktur',
+    enum: INFRASTRUCTURE_TYPES,
+    example: 'saluran',
+  })
+  @IsOptional()
+  @IsIn(INFRASTRUCTURE_TYPES as unknown as string[])
+  infrastructure_type?: string;
 
   @ApiProperty({ example: 1200, description: 'Length in meters' })
   @IsNumber()

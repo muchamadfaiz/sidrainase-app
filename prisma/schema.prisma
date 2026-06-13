@@ -176,6 +176,8 @@ model DrainagePoint {
   lng             Float
   drainage_type   DrainageType
   condition       DrainageCondition
+  // Jenis aset: saluran, gorong_gorong, pintu_air, rumah_pompa, manhole, kolam_retensi, inlet_outfall, lainnya
+  infrastructure_type String?
   length          Float // meter
   width           Float // meter
   depth           Float // meter
@@ -192,6 +194,7 @@ model DrainagePoint {
   @@index([condition])
   @@index([drainage_type])
   @@index([district])
+  @@index([infrastructure_type])
   @@index([polygon_coords], type: Gist)
   @@index([polyline_coords], type: Gist)
   @@map("drainage_points")

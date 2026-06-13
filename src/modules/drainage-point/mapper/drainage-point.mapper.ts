@@ -13,6 +13,7 @@ export interface DrainagePointRawRow {
   lng: number;
   drainage_type: string;
   condition: string;
+  infrastructure_type: string | null;
   length: number;
   width: number;
   depth: number;
@@ -35,6 +36,7 @@ export class DrainagePointMapper {
       lng: row.lng,
       drainage_type: row.drainage_type as any,
       condition: row.condition as any,
+      infrastructure_type: row.infrastructure_type ?? undefined,
       length: Number(row.length),
       width: Number(row.width),
       depth: Number(row.depth),
