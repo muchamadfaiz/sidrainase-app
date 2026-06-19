@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { DrainageType, DrainageCondition } from '@prisma/client';
+import { DrainageType } from '@prisma/client';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { PageOptionsDto } from '../../../common';
 
@@ -9,10 +9,10 @@ export class DrainagePointQueryDto extends PageOptionsDto {
   @IsOptional()
   search?: string;
 
-  @ApiPropertyOptional({ enum: DrainageCondition })
-  @IsEnum(DrainageCondition)
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
-  condition?: DrainageCondition;
+  condition?: string;
 
   @ApiPropertyOptional({ enum: DrainageType })
   @IsEnum(DrainageType)

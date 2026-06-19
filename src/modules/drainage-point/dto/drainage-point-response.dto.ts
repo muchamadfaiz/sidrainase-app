@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { DrainageType, DrainageCondition } from '@prisma/client';
+import { DrainageType } from '@prisma/client';
 import type { GeoJSONLineString, GeoJSONPolygon } from '../../../common';
 
 export class DrainagePointResponseDto {
@@ -21,8 +21,8 @@ export class DrainagePointResponseDto {
   @ApiProperty({ enum: DrainageType })
   drainage_type: DrainageType;
 
-  @ApiProperty({ enum: DrainageCondition })
-  condition: DrainageCondition;
+  @ApiProperty()
+  condition: string;
 
   @ApiPropertyOptional({ description: 'Jenis aset infrastruktur' })
   infrastructure_type?: string | null;

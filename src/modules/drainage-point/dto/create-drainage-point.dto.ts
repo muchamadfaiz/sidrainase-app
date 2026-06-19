@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { DrainageType, DrainageCondition } from '@prisma/client';
+import { DrainageType } from '@prisma/client';
 import {
   IsDateString,
   IsEnum,
@@ -14,14 +14,12 @@ import {
 import type { GeoJSONLineString, GeoJSONPolygon } from '../../../common';
 
 // Jenis aset infrastruktur drainase (nilai disimpan apa adanya sebagai text)
-export const INFRASTRUCTURE_TYPES = [
-  'saluran',
-  'gorong_gorong',
-  'pintu_air',
-  'rumah_pompa',
-  'manhole',
-  'kolam_retensi',
-  'inlet_outfall',
+export const INFRASTRUCTURE_TYPES = ['u_ditch', 'batu_kali', 'cor_u'] as const;
+
+// Kondisi drainase (text bebas, dikontrol FE; ganti daftar tanpa migrasi)
+export const CONDITION_TYPES = [
+  'belum_ada_saluran',
+  'perbaikan_tanggul',
   'lainnya',
 ] as const;
 
@@ -51,9 +49,9 @@ export class CreateDrainagePointDto {
   @IsEnum(DrainageType)
   drainage_type: DrainageType;
 
-  @ApiProperty({ enum: DrainageCondition, example: DrainageCondition.baik })
-  @IsEnum(DrainageCondition)
-  condition: DrainageCondition;
+  @ApiProperty({ enum: CONDITION_TYPES, example: 'belum_ada_saluran' })
+  @IsIn(CONDITION_TYPES as unknown as string[])
+  condition: string;
 
   @ApiPropertyOptional({
     description: 'Jenis aset infrastruktur',

@@ -175,8 +175,9 @@ model DrainagePoint {
   lat             Float
   lng             Float
   drainage_type   DrainageType
-  condition       DrainageCondition
-  // Jenis aset: saluran, gorong_gorong, pintu_air, rumah_pompa, manhole, kolam_retensi, inlet_outfall, lainnya
+  // text bebas (belum_ada_saluran, perbaikan_tanggul, lainnya) — dulu enum, diubah agar fleksibel
+  condition       String
+  // Jenis konstruksi: u_ditch, batu_kali, cor_u
   infrastructure_type String?
   length          Float // meter
   width           Float // meter

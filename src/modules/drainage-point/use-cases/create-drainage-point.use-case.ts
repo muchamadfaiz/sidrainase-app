@@ -70,7 +70,7 @@ export class CreateDrainagePointUseCase {
         ${dto.lat},
         ${dto.lng},
         ${dto.drainage_type}::"DrainageType",
-        ${dto.condition}::"DrainageCondition",
+        ${dto.condition},
         ${dto.infrastructure_type ?? null},
         ${dto.length},
         ${dto.width},

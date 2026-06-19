@@ -54,7 +54,7 @@ export class UpdateDrainagePointUseCase {
     if (dto.drainage_type !== undefined)
       updates.push(Prisma.sql`drainage_type = ${dto.drainage_type}::"DrainageType"`);
     if (dto.condition !== undefined)
-      updates.push(Prisma.sql`condition = ${dto.condition}::"DrainageCondition"`);
+      updates.push(Prisma.sql`condition = ${dto.condition}`);
     if (dto.infrastructure_type !== undefined)
       updates.push(Prisma.sql`infrastructure_type = ${dto.infrastructure_type}`);
     if (dto.length !== undefined) updates.push(Prisma.sql`length = ${dto.length}`);

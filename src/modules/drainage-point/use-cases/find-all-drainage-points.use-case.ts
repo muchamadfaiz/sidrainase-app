@@ -36,7 +36,7 @@ export class FindAllDrainagePointsUseCase {
       );
     }
     if (query.condition) {
-      conditions.push(Prisma.sql`condition = ${query.condition}::"DrainageCondition"`);
+      conditions.push(Prisma.sql`condition = ${query.condition}`);
     }
     if (query.drainage_type) {
       conditions.push(Prisma.sql`drainage_type = ${query.drainage_type}::"DrainageType"`);
