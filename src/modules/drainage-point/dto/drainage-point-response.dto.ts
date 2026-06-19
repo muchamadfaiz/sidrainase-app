@@ -27,6 +27,9 @@ export class DrainagePointResponseDto {
   @ApiPropertyOptional({ description: 'Jenis aset infrastruktur' })
   infrastructure_type?: string | null;
 
+  @ApiPropertyOptional({ description: 'Jenis kegiatan (rekonstruksi/pembuatan)' })
+  activity_type?: string | null;
+
   @ApiProperty({ description: 'meter' })
   length: number;
 

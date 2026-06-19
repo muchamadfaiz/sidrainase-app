@@ -23,6 +23,9 @@ export const CONDITION_TYPES = [
   'lainnya',
 ] as const;
 
+// Jenis kegiatan (dulu "kode") — rekonstruksi / pembuatan
+export const ACTIVITY_TYPES = ['rekonstruksi', 'pembuatan'] as const;
+
 export class CreateDrainagePointDto {
   @ApiPropertyOptional({
     description: 'Human-readable code (e.g. "D013"). Auto-generated if empty.',
@@ -61,6 +64,11 @@ export class CreateDrainagePointDto {
   @IsOptional()
   @IsIn(INFRASTRUCTURE_TYPES as unknown as string[])
   infrastructure_type?: string;
+
+  @ApiPropertyOptional({ enum: ACTIVITY_TYPES, example: 'rekonstruksi' })
+  @IsOptional()
+  @IsIn(ACTIVITY_TYPES as unknown as string[])
+  activity_type?: string;
 
   @ApiProperty({ example: 1200, description: 'Length in meters' })
   @IsNumber()

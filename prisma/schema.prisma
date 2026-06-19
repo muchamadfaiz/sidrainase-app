@@ -179,6 +179,8 @@ model DrainagePoint {
   condition       String
   // Jenis konstruksi: u_ditch, batu_kali, cor_u
   infrastructure_type String?
+  // Jenis kegiatan (dulu "kode"): rekonstruksi, pembuatan
+  activity_type   String?
   length          Float // meter
   width           Float // meter
   depth           Float // meter
