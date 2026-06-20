@@ -86,7 +86,14 @@ export class CreateDrainagePointUseCase {
       RETURNING id
     `;
 
-    return this.findById.execute(inserted[0].id);
+    const id = inserted[0].id;
+    if (dto.photo_file_ids?.length) {
+      await this.prisma.drainagePhoto.createMany({
+        data: dto.photo_file_ids.map((fileId) => ({ drainagePointId: id, fileId })),
+      });
+    }
+
+    return this.findById.execute(id);
   }
 
   /**

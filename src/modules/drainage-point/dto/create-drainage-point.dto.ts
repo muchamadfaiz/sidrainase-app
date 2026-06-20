@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { DrainageType } from '@prisma/client';
 import {
+  IsArray,
   IsDateString,
   IsEnum,
   IsIn,
@@ -69,6 +70,15 @@ export class CreateDrainagePointDto {
   @IsOptional()
   @IsIn(ACTIVITY_TYPES as unknown as string[])
   activity_type?: string;
+
+  @ApiPropertyOptional({
+    description: 'ID file hasil upload (POST /upload) untuk dijadikan foto kondisi',
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  photo_file_ids?: string[];
 
   @ApiProperty({ example: 1200, description: 'Length in meters' })
   @IsNumber()

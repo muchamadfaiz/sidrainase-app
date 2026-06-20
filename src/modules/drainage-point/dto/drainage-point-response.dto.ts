@@ -54,6 +54,9 @@ export class DrainagePointResponseDto {
   @ApiPropertyOptional({ description: 'GeoJSON LineString' })
   polyline_coords?: GeoJSONLineString | null;
 
+  @ApiPropertyOptional({ description: 'Foto kondisi', type: [Object] })
+  photos?: { id: string; url: string }[];
+
   @ApiProperty()
   created_at: Date;
 

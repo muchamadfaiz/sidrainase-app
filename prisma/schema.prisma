@@ -101,6 +101,8 @@ model File {
   mimetype     String
   size         Int
 
+  drainagePhotos DrainagePhoto[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -191,6 +193,8 @@ model DrainagePoint {
   polygon_coords  Unsupported("geometry(Polygon, 4326)")?
   polyline_coords Unsupported("geometry(LineString, 4326)")?
 
+  photos DrainagePhoto[]
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -201,6 +205,18 @@ model DrainagePoint {
   @@index([polygon_coords], type: Gist)
   @@index([polyline_coords], type: Gist)
   @@map("drainage_points")
+}
+
+model DrainagePhoto {
+  id              String        @id @default(uuid())
+  drainagePointId String
+  drainagePoint   DrainagePoint @relation(fields: [drainagePointId], references: [id], onDelete: Cascade)
+  fileId          String
+  file            File          @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+
+  @@index([drainagePointId])
+  @@map("drainage_photos")
 }
 
 model DrainageSegment {

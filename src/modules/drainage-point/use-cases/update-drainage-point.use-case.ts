@@ -85,8 +85,18 @@ export class UpdateDrainagePointUseCase {
       );
     }
 
+    // Foto: kalau dikirim, ganti total (hapus lama -> buat ulang)
+    if (dto.photo_file_ids !== undefined) {
+      await this.prisma.drainagePhoto.deleteMany({ where: { drainagePointId: id } });
+      if (dto.photo_file_ids.length) {
+        await this.prisma.drainagePhoto.createMany({
+          data: dto.photo_file_ids.map((fileId) => ({ drainagePointId: id, fileId })),
+        });
+      }
+    }
+
     if (updates.length === 0) {
-      // No-op — return current state
+      // Tidak ada perubahan kolom (mungkin cuma foto) — kembalikan state terkini
       return this.findById.execute(id);
     }
 

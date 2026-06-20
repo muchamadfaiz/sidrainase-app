@@ -81,8 +81,24 @@ export class FindAllDrainagePointsUseCase {
 
     const totalData = Number(totalRow[0]?.count ?? 0);
 
+    const data = DrainagePointMapper.toResponseDtoList(rows);
+    if (data.length) {
+      const photos = await this.prisma.drainagePhoto.findMany({
+        where: { drainagePointId: { in: data.map((d) => d.id) } },
+        include: { file: true },
+        orderBy: { createdAt: 'asc' },
+      });
+      const byPoint = new Map<string, { id: string; url: string }[]>();
+      for (const p of photos) {
+        const arr = byPoint.get(p.drainagePointId) ?? [];
+        arr.push({ id: p.id, url: p.file.url });
+        byPoint.set(p.drainagePointId, arr);
+      }
+      for (const d of data) d.photos = byPoint.get(d.id) ?? [];
+    }
+
     return {
-      data: DrainagePointMapper.toResponseDtoList(rows),
+      data,
       meta: new PageMetaDto({
         page: query.page,
         limit: query.limit,

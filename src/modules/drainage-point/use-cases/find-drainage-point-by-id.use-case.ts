@@ -30,6 +30,13 @@ export class FindDrainagePointByIdUseCase {
       throw new NotFoundException('Drainage point not found');
     }
 
-    return DrainagePointMapper.toResponseDto(rows[0]);
+    const dto = DrainagePointMapper.toResponseDto(rows[0]);
+    const photos = await this.prisma.drainagePhoto.findMany({
+      where: { drainagePointId: id },
+      include: { file: true },
+      orderBy: { createdAt: 'asc' },
+    });
+    dto.photos = photos.map((p) => ({ id: p.id, url: p.file.url }));
+    return dto;
   }
 }
