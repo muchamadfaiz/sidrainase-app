@@ -10,6 +10,7 @@ import { UserModule } from './modules/user/user.module';
 import { DrainagePointModule } from './modules/drainage-point/drainage-point.module';
 import { DrainageSegmentModule } from './modules/drainage-segment/drainage-segment.module';
 import { FloodZoneModule } from './modules/flood-zone/flood-zone.module';
+import { UploadModule } from './modules/upload/upload.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from './common';
 
@@ -44,6 +45,7 @@ import { RolesGuard } from './common';
     DrainagePointModule,
     DrainageSegmentModule,
     FloodZoneModule,
+    UploadModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
