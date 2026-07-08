@@ -91,7 +91,7 @@ export class FindAllDrainagePointsUseCase {
       const byPoint = new Map<string, { id: string; url: string }[]>();
       for (const p of photos) {
         const arr = byPoint.get(p.drainagePointId) ?? [];
-        arr.push({ id: p.id, url: p.file.url });
+        arr.push({ id: p.fileId, url: p.file.url });
         byPoint.set(p.drainagePointId, arr);
       }
       for (const d of data) d.photos = byPoint.get(d.id) ?? [];

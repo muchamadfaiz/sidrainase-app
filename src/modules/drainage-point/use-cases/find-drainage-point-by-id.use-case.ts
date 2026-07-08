@@ -36,7 +36,7 @@ export class FindDrainagePointByIdUseCase {
       include: { file: true },
       orderBy: { createdAt: 'asc' },
     });
-    dto.photos = photos.map((p) => ({ id: p.id, url: p.file.url }));
+    dto.photos = photos.map((p) => ({ id: p.fileId, url: p.file.url }));
     return dto;
   }
 }
