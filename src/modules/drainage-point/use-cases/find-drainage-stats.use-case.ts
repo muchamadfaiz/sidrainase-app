@@ -7,25 +7,30 @@ export class FindDrainageStatsUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(): Promise<DrainageStatsResponseDto> {
-    const [byCondition, byType, byDistrict, totals] = await Promise.all([
-      this.prisma.drainagePoint.groupBy({
-        by: ['condition'],
-        _count: { _all: true },
-      }),
-      this.prisma.drainagePoint.groupBy({
-        by: ['drainage_type'],
-        _count: { _all: true },
-      }),
-      this.prisma.drainagePoint.groupBy({
-        by: ['district'],
-        _count: { _all: true },
-        _sum: { length: true },
-      }),
-      this.prisma.drainagePoint.aggregate({
-        _count: { _all: true },
-        _sum: { length: true },
-      }),
-    ]);
+    const [byCondition, byType, byDistrict, byDistrictCondition, totals] =
+      await Promise.all([
+        this.prisma.drainagePoint.groupBy({
+          by: ['condition'],
+          _count: { _all: true },
+        }),
+        this.prisma.drainagePoint.groupBy({
+          by: ['drainage_type'],
+          _count: { _all: true },
+        }),
+        this.prisma.drainagePoint.groupBy({
+          by: ['district'],
+          _count: { _all: true },
+          _sum: { length: true },
+        }),
+        this.prisma.drainagePoint.groupBy({
+          by: ['district', 'condition'],
+          _count: { _all: true },
+        }),
+        this.prisma.drainagePoint.aggregate({
+          _count: { _all: true },
+          _sum: { length: true },
+        }),
+      ]);
 
     const conditionMap: Record<string, number> = {};
     for (const row of byCondition) {
@@ -45,12 +50,19 @@ export class FindDrainageStatsUseCase {
       }))
       .sort((a, b) => b.count - a.count);
 
+    const districtConditionList = byDistrictCondition.map((row) => ({
+      district: row.district,
+      condition: row.condition,
+      count: row._count._all,
+    }));
+
     return {
       total_points: totals._count._all,
       total_length_meters: totals._sum.length ?? 0,
       by_condition: conditionMap,
       by_type: typeMap,
       by_district: districtList,
+      by_district_condition: districtConditionList,
     };
   }
 }

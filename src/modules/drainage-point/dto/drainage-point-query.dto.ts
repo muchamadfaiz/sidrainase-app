@@ -23,4 +23,9 @@ export class DrainagePointQueryDto extends PageOptionsDto {
   @IsString()
   @IsOptional()
   district?: string;
+
+  @ApiPropertyOptional({ description: 'Jenis infrastruktur (u_ditch, dll)' })
+  @IsString()
+  @IsOptional()
+  infrastructure_type?: string;
 }

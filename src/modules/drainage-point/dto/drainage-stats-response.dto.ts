@@ -11,6 +11,17 @@ export class DistrictStatDto {
   total_length: number;
 }
 
+export class DistrictConditionStatDto {
+  @ApiProperty({ example: 'Jakarta Pusat' })
+  district: string;
+
+  @ApiProperty({ example: 'lainnya' })
+  condition: string;
+
+  @ApiProperty({ example: 5 })
+  count: number;
+}
+
 export class DrainageStatsResponseDto {
   @ApiProperty({ example: 21 })
   total_points: number;
@@ -32,4 +43,7 @@ export class DrainageStatsResponseDto {
 
   @ApiProperty({ type: [DistrictStatDto] })
   by_district: DistrictStatDto[];
+
+  @ApiProperty({ type: [DistrictConditionStatDto] })
+  by_district_condition: DistrictConditionStatDto[];
 }

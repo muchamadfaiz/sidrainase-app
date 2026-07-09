@@ -20,6 +20,7 @@ import {
 import { ResponseMessage, Roles } from '../../common';
 import {
   CreateDrainagePointDto,
+  DrainageMapQueryDto,
   DrainagePointQueryDto,
   DrainagePointResponseDto,
   DrainageStatsResponseDto,
@@ -30,6 +31,7 @@ import {
   FindAllDrainagePointsUseCase,
   FindDrainagePointByIdUseCase,
   FindDrainageStatsUseCase,
+  FindMapDrainagePointsUseCase,
   RemoveDrainagePointUseCase,
   UpdateDrainagePointUseCase,
 } from './use-cases';
@@ -45,6 +47,7 @@ export class DrainagePointController {
     private readonly updateUseCase: UpdateDrainagePointUseCase,
     private readonly removeUseCase: RemoveDrainagePointUseCase,
     private readonly statsUseCase: FindDrainageStatsUseCase,
+    private readonly mapUseCase: FindMapDrainagePointsUseCase,
   ) {}
 
   @Get('stats')
@@ -53,6 +56,13 @@ export class DrainagePointController {
   @ResponseMessage('Success get drainage stats')
   getStats() {
     return this.statsUseCase.execute();
+  }
+
+  @Get('map')
+  @ApiOperation({ summary: 'Titik ringkas dalam viewport (bbox) buat peta, dibatasi limit' })
+  @ResponseMessage('Success get map drainage points')
+  map(@Query() query: DrainageMapQueryDto) {
+    return this.mapUseCase.execute(query);
   }
 
   @Get()

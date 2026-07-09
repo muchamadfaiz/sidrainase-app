@@ -5,6 +5,7 @@ import {
   FindAllDrainagePointsUseCase,
   FindDrainagePointByIdUseCase,
   FindDrainageStatsUseCase,
+  FindMapDrainagePointsUseCase,
   RemoveDrainagePointUseCase,
   UpdateDrainagePointUseCase,
 } from './use-cases';
@@ -18,6 +19,7 @@ import {
     UpdateDrainagePointUseCase,
     RemoveDrainagePointUseCase,
     FindDrainageStatsUseCase,
+    FindMapDrainagePointsUseCase,
   ],
 })
 export class DrainagePointModule {}

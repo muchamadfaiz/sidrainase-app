@@ -44,6 +44,9 @@ export class FindAllDrainagePointsUseCase {
     if (query.district) {
       conditions.push(Prisma.sql`district = ${query.district}`);
     }
+    if (query.infrastructure_type) {
+      conditions.push(Prisma.sql`infrastructure_type = ${query.infrastructure_type}`);
+    }
 
     const whereClause =
       conditions.length > 0
