@@ -74,8 +74,7 @@ export class DrainagePointController {
   }
 
   @Post()
-  @Roles('ADMIN')
-  @ApiOperation({ summary: 'Create drainage point (Admin only)' })
+  @ApiOperation({ summary: 'Create drainage point (semua user login, mis. surveyor)' })
   @ApiResponse({ status: 201, type: DrainagePointResponseDto })
   @ApiResponse({ status: 409, description: 'drainage_id already exists' })
   @ResponseMessage('Success create drainage point')
