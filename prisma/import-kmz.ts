@@ -38,6 +38,29 @@ function num(s: string): number {
   return Number.isNaN(n) ? 0 : n;
 }
 
+/**
+ * Panjang garis (meter) via haversine. Dipakai kalau PANJANG_M di KMZ = 0
+ * (10rb+ baris begitu). Cocok ~0.05m dgn PostGIS ST_Length(geography).
+ * ponytail: haversine cukup di skala kota; ganti ke PostGIS kalau butuh presisi.
+ */
+function geoLength(coords: [number, number][]): number {
+  const R = 6371000;
+  let sum = 0;
+  for (let i = 1; i < coords.length; i++) {
+    const [lng1, lat1] = coords[i - 1];
+    const [lng2, lat2] = coords[i];
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) ** 2;
+    sum += 2 * R * Math.asin(Math.sqrt(a));
+  }
+  return Math.round(sum * 100) / 100;
+}
+
 async function main() {
   console.log(`Baca ${KML_PATH} ...`);
   const kml = fs.readFileSync(KML_PATH, 'utf8');
@@ -71,7 +94,9 @@ async function main() {
 
     const nmSungai = attr(pm, 'NM_SUNGAI');
     const ket = attr(pm, 'KETERANGAN');
-    const panjang = num(attr(pm, 'PANJANG_M'));
+    // PANJANG_M di sumber TIDAK ANDAL (sebagian 0, sebagian satuan km, sebagian m).
+    // Pakai panjang dari geometri sebagai sumber kebenaran.
+    const panjang = geoLength(coords);
     const lebar = num(attr(pm, 'LEBAR_M'));
 
     const name = nmSungai || ket || `Saluran ${i + 1}`;

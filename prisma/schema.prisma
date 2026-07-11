@@ -183,6 +183,8 @@ model DrainagePoint {
   infrastructure_type String?
   // Jenis kegiatan (dulu "kode"): rekonstruksi, pembuatan
   activity_type   String?
+  // Nomor pekerjaan/kontrak — buat pelacakan dokumen audit (BPK)
+  job_number      String?
   length          Float // meter
   width           Float // meter
   depth           Float // meter
@@ -205,6 +207,15 @@ model DrainagePoint {
   @@index([polygon_coords], type: Gist)
   @@index([polyline_coords], type: Gist)
   @@map("drainage_points")
+}
+
+// Setelan aplikasi berbagi (key-value). Mis. key='colors' -> warna kondisi/tipe.
+model AppSetting {
+  key        String   @id
+  value      Json
+  updated_at DateTime @updatedAt
+
+  @@map("app_settings")
 }
 
 model DrainagePhoto {

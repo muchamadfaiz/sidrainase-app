@@ -58,7 +58,7 @@ export class CreateDrainagePointUseCase {
     const inserted = await this.prisma.$queryRaw<{ id: string }[]>`
       INSERT INTO drainage_points (
         id, drainage_id, name, lat, lng,
-        drainage_type, condition, infrastructure_type, activity_type,
+        drainage_type, condition, infrastructure_type, activity_type, job_number,
         length, width, depth,
         last_inspection, district, description,
         polygon_coords, polyline_coords,
@@ -73,6 +73,7 @@ export class CreateDrainagePointUseCase {
         ${dto.condition},
         ${dto.infrastructure_type ?? null},
         ${dto.activity_type ?? null},
+        ${dto.job_number ?? null},
         ${dto.length},
         ${dto.width},
         ${dto.depth},

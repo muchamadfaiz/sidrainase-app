@@ -59,6 +59,8 @@ export class UpdateDrainagePointUseCase {
       updates.push(Prisma.sql`infrastructure_type = ${dto.infrastructure_type}`);
     if (dto.activity_type !== undefined)
       updates.push(Prisma.sql`activity_type = ${dto.activity_type}`);
+    if (dto.job_number !== undefined)
+      updates.push(Prisma.sql`job_number = ${dto.job_number}`);
     if (dto.length !== undefined) updates.push(Prisma.sql`length = ${dto.length}`);
     if (dto.width !== undefined) updates.push(Prisma.sql`width = ${dto.width}`);
     if (dto.depth !== undefined) updates.push(Prisma.sql`depth = ${dto.depth}`);

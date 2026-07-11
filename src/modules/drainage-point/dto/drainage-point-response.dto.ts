@@ -30,6 +30,9 @@ export class DrainagePointResponseDto {
   @ApiPropertyOptional({ description: 'Jenis kegiatan (rekonstruksi/pembuatan)' })
   activity_type?: string | null;
 
+  @ApiPropertyOptional({ description: 'Nomor pekerjaan/kontrak (audit BPK)' })
+  job_number?: string | null;
+
   @ApiProperty({ description: 'meter' })
   length: number;
 

@@ -14,11 +14,15 @@ export interface DrainageMapPoint {
   condition: string;
   district: string;
   length: number;
+  width: number;
+  depth: number;
+  job_number: string | null;
+  last_inspection: Date;
   polygon_coords: any;
   polyline_coords: any;
 }
 
-const MAX_LIMIT = 5000;
+const MAX_LIMIT = 10000;
 
 @Injectable()
 export class FindMapDrainagePointsUseCase {
@@ -45,7 +49,7 @@ export class FindMapDrainagePointsUseCase {
         id, drainage_id, name, lat, lng,
         drainage_type::text AS drainage_type,
         condition::text AS condition,
-        district, length,
+        district, length, width, depth, job_number, last_inspection,
         ST_AsGeoJSON(polygon_coords)::json AS polygon_coords,
         ST_AsGeoJSON(polyline_coords)::json AS polyline_coords
       FROM drainage_points

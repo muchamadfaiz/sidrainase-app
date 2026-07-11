@@ -71,6 +71,11 @@ export class CreateDrainagePointDto {
   @IsIn(ACTIVITY_TYPES as unknown as string[])
   activity_type?: string;
 
+  @ApiPropertyOptional({ description: 'Nomor pekerjaan/kontrak (buat audit BPK)', example: 'SPK-2026-014' })
+  @IsOptional()
+  @IsString()
+  job_number?: string;
+
   @ApiPropertyOptional({
     description: 'ID file hasil upload (POST /upload) untuk dijadikan foto kondisi',
     type: [String],
