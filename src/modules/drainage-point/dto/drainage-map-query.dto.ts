@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 /**
  * Query buat endpoint peta: ambil titik dalam viewport (bbox lat/lng) + cap jumlah.
@@ -36,4 +36,31 @@ export class DrainageMapQueryDto {
   @IsNumber()
   @IsOptional()
   limit?: number;
+
+  // --- Filter (sama seperti di tabel, biar peta bisa disaring juga) ---
+
+  @ApiPropertyOptional({ description: 'Cari di name / drainage_id / district' })
+  @IsString()
+  @IsOptional()
+  search?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  condition?: string;
+
+  @ApiPropertyOptional({ example: 'primer' })
+  @IsString()
+  @IsOptional()
+  drainage_type?: string;
+
+  @ApiPropertyOptional({ example: 'Sukarami' })
+  @IsString()
+  @IsOptional()
+  district?: string;
+
+  @ApiPropertyOptional({ example: 'u_ditch' })
+  @IsString()
+  @IsOptional()
+  infrastructure_type?: string;
 }

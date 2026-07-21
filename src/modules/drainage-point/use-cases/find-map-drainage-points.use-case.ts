@@ -46,6 +46,29 @@ export class FindMapDrainagePointsUseCase {
     if (query.minLng != null && query.maxLng != null) {
       conditions.push(Prisma.sql`lng BETWEEN ${query.minLng} AND ${query.maxLng}`);
     }
+    // Filter sama persis dgn tabel, biar peta bisa disaring juga
+    if (query.search) {
+      const pattern = `%${query.search}%`;
+      conditions.push(
+        Prisma.sql`(name ILIKE ${pattern} OR drainage_id ILIKE ${pattern} OR district ILIKE ${pattern})`,
+      );
+    }
+    if (query.condition) {
+      conditions.push(Prisma.sql`condition = ${query.condition}`);
+    }
+    if (query.drainage_type) {
+      conditions.push(
+        Prisma.sql`drainage_type = ${query.drainage_type}::"DrainageType"`,
+      );
+    }
+    if (query.district) {
+      conditions.push(Prisma.sql`district = ${query.district}`);
+    }
+    if (query.infrastructure_type) {
+      conditions.push(
+        Prisma.sql`infrastructure_type = ${query.infrastructure_type}`,
+      );
+    }
     const whereClause =
       conditions.length > 0
         ? Prisma.sql`WHERE ${Prisma.join(conditions, ' AND ')}`
