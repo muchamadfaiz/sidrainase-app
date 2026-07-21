@@ -22,7 +22,16 @@ export interface DrainageMapPoint {
   polyline_coords: any;
 }
 
-const MAX_LIMIT = 10000;
+// Cukup buat kirim SEMUA data (17rb) — payload dijaga kecil lewat simplify+presisi,
+// bukan lewat memotong jumlah data.
+const MAX_LIMIT = 50000;
+
+// Lebar peta rata-rata (px). Dipakai nurunin toleransi simplify ~1 piksel:
+// vertex yg jaraknya di bawah 1 piksel di layar percuma dikirim.
+const ASSUMED_MAP_WIDTH_PX = 1200;
+
+/** Presisi koordinat GeoJSON (6 desimal ≈ 0.1 m — jauh lebih dari cukup). */
+const COORD_DECIMALS = 6;
 
 @Injectable()
 export class FindMapDrainagePointsUseCase {
@@ -44,16 +53,32 @@ export class FindMapDrainagePointsUseCase {
 
     const limit = Math.min(query.limit ?? 3000, MAX_LIMIT);
 
+    // Toleransi simplify = ~1 piksel pada zoom saat ini (derajat).
+    // Zoom jauh -> bbox lebar -> toleransi besar -> vertex dipangkas banyak.
+    // Zoom dekat -> bbox sempit -> toleransi kecil -> nyaris presisi penuh.
+    const spanLng =
+      query.minLng != null && query.maxLng != null
+        ? Math.abs(query.maxLng - query.minLng)
+        : 0;
+    const tolerance = spanLng > 0 ? spanLng / ASSUMED_MAP_WIDTH_PX : 0;
+
+    // Kalau tanpa bbox (tolerance 0), pakai geometri apa adanya.
+    const simplify = (col: string) =>
+      tolerance > 0
+        ? Prisma.sql`ST_AsGeoJSON(ST_SimplifyPreserveTopology(${Prisma.raw(col)}, ${tolerance}), ${COORD_DECIMALS})::json`
+        : Prisma.sql`ST_AsGeoJSON(${Prisma.raw(col)}, ${COORD_DECIMALS})::json`;
+
     return this.prisma.$queryRaw<DrainageMapPoint[]>`
       SELECT
         id, drainage_id, name, lat, lng,
         drainage_type::text AS drainage_type,
         condition::text AS condition,
         district, length, width, depth, job_number, last_inspection,
-        ST_AsGeoJSON(polygon_coords)::json AS polygon_coords,
-        ST_AsGeoJSON(polyline_coords)::json AS polyline_coords
+        ${simplify('polygon_coords')} AS polygon_coords,
+        ${simplify('polyline_coords')} AS polyline_coords
       FROM drainage_points
       ${whereClause}
+      ORDER BY length DESC NULLS LAST, drainage_id
       LIMIT ${limit}
     `;
   }

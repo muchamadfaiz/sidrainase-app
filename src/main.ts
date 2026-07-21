@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import compression from 'compression';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common';
@@ -15,6 +16,9 @@ async function bootstrap() {
 
   // Logger
   app.useLogger(app.get(Logger));
+
+  // Gzip: payload peta (GeoJSON) turun ~7x. Wajib buat koneksi lambat client.
+  app.use(compression());
 
   // Config
   const configService = app.get(ConfigService);
