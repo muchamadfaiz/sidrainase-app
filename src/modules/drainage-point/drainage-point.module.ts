@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { SettingsModule } from '../settings';
 import { DrainagePointController } from './drainage-point.controller';
 import {
   CreateDrainagePointUseCase,
@@ -6,11 +7,13 @@ import {
   FindDrainagePointByIdUseCase,
   FindDrainageStatsUseCase,
   FindMapDrainagePointsUseCase,
+  PublicSubmitDrainageUseCase,
   RemoveDrainagePointUseCase,
   UpdateDrainagePointUseCase,
 } from './use-cases';
 
 @Module({
+  imports: [SettingsModule],
   controllers: [DrainagePointController],
   providers: [
     FindAllDrainagePointsUseCase,
@@ -20,6 +23,7 @@ import {
     RemoveDrainagePointUseCase,
     FindDrainageStatsUseCase,
     FindMapDrainagePointsUseCase,
+  PublicSubmitDrainageUseCase,
   ],
 })
 export class DrainagePointModule {}

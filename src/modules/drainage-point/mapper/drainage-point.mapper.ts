@@ -16,6 +16,8 @@ export interface DrainagePointRawRow {
   infrastructure_type: string | null;
   activity_type: string | null;
   job_number: string | null;
+  submitter_name: string | null;
+  submitter_phone: string | null;
   length: number;
   width: number;
   depth: number;
@@ -41,6 +43,8 @@ export class DrainagePointMapper {
       infrastructure_type: row.infrastructure_type ?? undefined,
       activity_type: row.activity_type ?? undefined,
       job_number: row.job_number ?? undefined,
+      submitter_name: row.submitter_name ?? undefined,
+      submitter_phone: row.submitter_phone ?? undefined,
       length: Number(row.length),
       width: Number(row.width),
       depth: Number(row.depth),

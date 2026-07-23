@@ -3,12 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   HttpStatus,
   Param,
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -17,7 +19,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ResponseMessage, Roles } from '../../common';
+import { Public, ResponseMessage, Roles } from '../../common';
+import { PublicAccessGuard } from '../settings';
 import {
   CreateDrainagePointDto,
   DrainageMapQueryDto,
@@ -32,6 +35,7 @@ import {
   FindDrainagePointByIdUseCase,
   FindDrainageStatsUseCase,
   FindMapDrainagePointsUseCase,
+  PublicSubmitDrainageUseCase,
   RemoveDrainagePointUseCase,
   UpdateDrainagePointUseCase,
 } from './use-cases';
@@ -48,6 +52,7 @@ export class DrainagePointController {
     private readonly removeUseCase: RemoveDrainagePointUseCase,
     private readonly statsUseCase: FindDrainageStatsUseCase,
     private readonly mapUseCase: FindMapDrainagePointsUseCase,
+    private readonly publicSubmit: PublicSubmitDrainageUseCase,
   ) {}
 
   @Get('stats')
@@ -81,6 +86,40 @@ export class DrainagePointController {
   @ResponseMessage('Success get drainage point')
   detail(@Param('id') id: string) {
     return this.findById.execute(id);
+  }
+
+  @Post('public')
+  @Public()
+  @UseGuards(PublicAccessGuard)
+  @ApiOperation({
+    summary: 'Tambah data dari link publik /input (butuh kode akses)',
+  })
+  @ApiResponse({ status: 201, type: DrainagePointResponseDto })
+  @ResponseMessage('Data tersimpan')
+  publicCreate(
+    @Body() dto: CreateDrainagePointDto,
+    @Headers('x-submitter-name') name?: string,
+    @Headers('x-submitter-phone') phone?: string,
+  ) {
+    return this.publicSubmit.create(dto, { name, phone });
+  }
+
+  @Patch('public/:id')
+  @Public()
+  @UseGuards(PublicAccessGuard)
+  @ApiOperation({
+    summary: 'Ubah data dari link publik /input (butuh kode akses, dicatat riwayat)',
+  })
+  @ApiParam({ name: 'id', description: 'Drainage Point UUID' })
+  @ApiResponse({ status: 200, type: DrainagePointResponseDto })
+  @ResponseMessage('Perubahan tersimpan')
+  publicUpdate(
+    @Param('id') id: string,
+    @Body() dto: UpdateDrainagePointDto,
+    @Headers('x-submitter-name') name?: string,
+    @Headers('x-submitter-phone') phone?: string,
+  ) {
+    return this.publicSubmit.update(id, dto, { name, phone });
   }
 
   @Post()

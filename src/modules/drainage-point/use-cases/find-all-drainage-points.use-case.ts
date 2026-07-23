@@ -65,6 +65,7 @@ export class FindAllDrainagePointsUseCase {
           drainage_type::text AS drainage_type,
           condition::text AS condition,
           infrastructure_type, activity_type, job_number,
+          submitter_name, submitter_phone,
           length, width, depth, last_inspection, district, description,
           ST_AsGeoJSON(polygon_coords)::json AS polygon_coords,
           ST_AsGeoJSON(polyline_coords)::json AS polyline_coords,

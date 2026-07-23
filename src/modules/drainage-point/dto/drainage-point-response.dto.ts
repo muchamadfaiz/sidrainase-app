@@ -33,6 +33,12 @@ export class DrainagePointResponseDto {
   @ApiPropertyOptional({ description: 'Nomor pekerjaan/kontrak (audit BPK)' })
   job_number?: string | null;
 
+  @ApiPropertyOptional({ description: 'Nama pengirim via link publik' })
+  submitter_name?: string | null;
+
+  @ApiPropertyOptional({ description: 'No. HP pengirim via link publik' })
+  submitter_phone?: string | null;
+
   @ApiProperty({ description: 'meter' })
   length: number;
 

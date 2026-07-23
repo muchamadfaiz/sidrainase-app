@@ -185,6 +185,13 @@ model DrainagePoint {
   activity_type   String?
   // Nomor pekerjaan/kontrak — buat pelacakan dokumen audit (BPK)
   job_number      String?
+  // Status verifikasi: "verified" (data resmi) | "pending" (kiriman link publik)
+  status          String   @default("verified")
+  // Jejak pengirim dari link publik (kosong utk data resmi)
+  submitter_name  String?
+  submitter_phone String?
+
+  audits DrainageAudit[]
   length          Float // meter
   width           Float // meter
   depth           Float // meter
@@ -207,6 +214,33 @@ model DrainagePoint {
   @@index([polygon_coords], type: Gist)
   @@index([polyline_coords], type: Gist)
   @@map("drainage_points")
+}
+
+/**
+ * Riwayat perubahan data drainase (append-only, tidak pernah diubah/dihapus).
+ * Wajib ada karena link kode-akses membolehkan orang luar menambah & mengedit:
+ * kalau ada kekeliruan/penyalahgunaan, bisa dilacak siapa & kapan.
+ */
+model DrainageAudit {
+  id              String        @id @default(uuid())
+  drainagePointId String
+  drainagePoint   DrainagePoint @relation(fields: [drainagePointId], references: [id], onDelete: Cascade)
+
+  action String // "create" | "update"
+  source String // "public" (link kode akses) | "admin" (login)
+
+  actor_name  String? // nama pengisi (link publik)
+  actor_phone String? // no. HP pengisi
+  actor_user  String? // email/id user yg login (kalau dari dashboard)
+
+  // Ringkasan field yg berubah: { field: { dari, jadi } }
+  changes Json?
+
+  created_at DateTime @default(now())
+
+  @@index([drainagePointId])
+  @@index([created_at])
+  @@map("drainage_audits")
 }
 
 // Setelan aplikasi berbagi (key-value). Mis. key='colors' -> warna kondisi/tipe.
